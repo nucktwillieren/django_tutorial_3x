@@ -1,5 +1,3 @@
-
-
 import os
 import django
 import mqtt
@@ -14,7 +12,7 @@ def handlerGenerator(models):
         data = msg.payload.decode('utf-8')
         data_json = json.loads(data)
 
-        models.WeatherInfo.objects.create(
+        models.objects.create(
             temperature=data_json["Temperature"],
             time=data_json["Time"],
         )
@@ -25,13 +23,13 @@ def handlerGenerator(models):
 
 
 if __name__ == "__main__":
-    from weather import models
+    from weather.models import WeatherInfo
 
     scope = "6255c868649b297b8f217296"
     username = "625f2ba2649b297b8f2172aa"
     password = "1234"
 
     sub = mqtt.IdeaSkyMQTTSubscriber(
-        scope, username, password, handlerGenerator(models)
+        scope, username, password, handlerGenerator(WeatherInfo)
     )
     sub.run()
